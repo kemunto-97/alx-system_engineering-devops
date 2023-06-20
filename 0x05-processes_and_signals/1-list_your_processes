@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Display a list of currently running processes.
+# Requirements:
+# - Show all processes, for all users, including those which might not have a TTY.
+# - Display in a user-oriented format.
+# - Show process hierarchy.
+
+# Get the process tree and format it with indentation
+ps axo ppid,pid,user,%cpu,%mem,start,time,command --forest | awk 'BEGIN { indent = 0; } { printf("%*s%s\n", indent, "", $0); indent = length($1)+4; }'
+
+# Display a separator line
+echo "--------------------------------------------------------"
+
+# Display the process count
+process_count=$(ps -e -o user= | sort | uniq -c | awk '{print $2 ":" $1}')
+echo "Process Count by User:"
+echo "$process_count"
+
